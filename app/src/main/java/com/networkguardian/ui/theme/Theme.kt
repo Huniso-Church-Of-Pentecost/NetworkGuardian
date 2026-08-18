@@ -11,6 +11,8 @@ import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 
+private val Color_White = androidx.compose.ui.graphics.Color(0xFFFFFFFF)
+
 private val DarkColors = darkColorScheme(
     primary = GuardianTeal80,
     onPrimary = GuardianNavy10,
@@ -29,7 +31,6 @@ private val LightColors = lightColorScheme(
     error = GuardianRed
 )
 
-private val Color_White = androidx.compose.ui.graphics.Color(0xFFFFFFFF)
 
 @Composable
 fun NetworkGuardianTheme(

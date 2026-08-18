@@ -16,7 +16,7 @@ import androidx.room.RoomDatabase
         AppSettingsEntity::class
     ],
     version = 1,
-    exportSchema = true
+    exportSchema = false
 )
 abstract class NetworkGuardianDatabase : RoomDatabase() {
     abstract fun networkProfileDao(): NetworkProfileDao
