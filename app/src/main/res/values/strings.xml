@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">NetworkGuardian</string>
+    <string name="monitoring_notification_title">NetworkGuardian is monitoring</string>
+    <string name="monitoring_notification_text">Watching your network for device activity</string>
+</resources>

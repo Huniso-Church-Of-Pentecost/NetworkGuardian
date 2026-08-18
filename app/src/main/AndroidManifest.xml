@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- Required to read basic network state (connection type, hotspot on/off where exposed) -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+
+    <!-- Required to observe network changes for monitoring (join/leave/state change) -->
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" tools:node="merge" />
+
+    <!--
+        NOTE: Android does NOT grant third-party apps a documented, non-privileged API to
+        enumerate hotspot clients or enforce a persistent client block on stock AOSP.
+        We intentionally do NOT request ACCESS_FINE_LOCATION merely to "unlock" legacy
+        Wi-Fi scan behavior, since NetworkGuardian's discovery is local-subnet based
+        (ARP table / reachability), not Wi-Fi scan results. If a future capability
+        genuinely requires it, the request and justification will be added here
+        alongside a runtime explanation shown to the user.
+    -->
+
+    <!-- Local notifications (Android 13+ requires runtime permission) -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+
+    <!-- Foreground service used ONLY while actively monitoring, per Android background limits -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE" />
+
+    <!-- Biometric app-lock -->
+    <uses-permission android:name="android.permission.USE_BIOMETRIC" />
+
+    <application
+        android:name=".NetworkGuardianApp"
+        android:allowBackup="false"
+        android:fullBackupContent="false"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.NetworkGuardian"
+        tools:targetApi="31">
+
+        <activity
+            android:name=".MainActivity"
+            android:exported="true"
+            android:theme="@style/Theme.NetworkGuardian">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <service
+            android:name=".network.monitoring.NetworkMonitorService"
+            android:enabled="true"
+            android:exported="false"
+            android:foregroundServiceType="specialUse">
+            <property
+                android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
+                android:value="Local network device monitoring initiated by the user for a network they administer" />
+        </service>
+
+    </application>
+
+</manifest>
