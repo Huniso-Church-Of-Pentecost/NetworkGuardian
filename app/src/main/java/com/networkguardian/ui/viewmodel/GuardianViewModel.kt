@@ -106,6 +106,19 @@ class GuardianViewModel(private val graph: AppGraph) : ViewModel() {
         graph.deviceRepository.clearHistory(profile)
     }
 
+    private val _isScanning = MutableStateFlow(false)
+    val isScanning: StateFlow<Boolean> = _isScanning
+
+    fun scanNow() = viewModelScope.launch {
+        val profile = _activeProfileId.value ?: return@launch
+        _isScanning.value = true
+        try {
+            graph.discoveryReconciler.runOnce(profile)
+        } finally {
+            _isScanning.value = false
+        }
+    }
+
     fun dashboardState(): DashboardUiState {
         val list = devices.value
         return DashboardUiState(

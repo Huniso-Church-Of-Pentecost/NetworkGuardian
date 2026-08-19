@@ -18,6 +18,7 @@ import com.networkguardian.domain.usecases.UnblockDeviceUseCase
 import com.networkguardian.domain.usecases.UntrustDeviceUseCase
 import com.networkguardian.hotspot.HotspotManager
 import com.networkguardian.network.discovery.CapabilityDetector
+import com.networkguardian.network.discovery.DiscoveryReconciler
 import com.networkguardian.network.discovery.NetworkDiscoveryEngine
 import com.networkguardian.network.monitoring.NetworkMonitor
 import com.networkguardian.notifications.DeviceNotificationManager
@@ -78,6 +79,8 @@ class AppGraph private constructor(context: Context) {
     val notificationManager = DeviceNotificationManager(appContext, settingsRepository)
     val appLockManager = AppLockManager(settingsRepository)
     val activeProfileProvider = ActiveProfileProvider(settingsRepository)
+
+    val discoveryReconciler = DiscoveryReconciler(discoveryEngine, deviceRepository, notificationManager)
 
     // Use cases
     val trustDeviceUseCase = TrustDeviceUseCase(deviceRepository)

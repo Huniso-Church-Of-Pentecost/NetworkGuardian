@@ -7,7 +7,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -25,6 +27,7 @@ import java.util.Locale
 fun DashboardScreen(viewModel: GuardianViewModel) {
     val devices by viewModel.devices.collectAsState()
     val history by viewModel.history.collectAsState()
+    val isScanning by viewModel.isScanning.collectAsState()
     val state = viewModel.dashboardState()
 
     LazyColumn(
@@ -34,8 +37,19 @@ fun DashboardScreen(viewModel: GuardianViewModel) {
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         item {
-            Text("NetworkGuardian", style = MaterialTheme.typography.titleLarge)
-            Text(state.activeProfileName, style = MaterialTheme.typography.bodyLarge)
+            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+                Column {
+                    Text("NetworkGuardian", style = MaterialTheme.typography.titleLarge)
+                    Text(state.activeProfileName, style = MaterialTheme.typography.bodyLarge)
+                }
+                Button(onClick = { viewModel.scanNow() }, enabled = !isScanning) {
+                    if (isScanning) {
+                        CircularProgressIndicator(modifier = Modifier.padding(2.dp))
+                    } else {
+                        Text("Scan now")
+                    }
+                }
+            }
         }
 
         item {
@@ -48,6 +62,10 @@ fun DashboardScreen(viewModel: GuardianViewModel) {
                         Text("Unknown: ${state.unknownCount}")
                         Text("Blocked: ${state.blockedCount}")
                     }
+                    Text(
+                        "Background monitoring runs automatically about every 15 minutes. Tap \"Scan now\" for an immediate check.",
+                        style = MaterialTheme.typography.bodyMedium
+                    )
                 }
             }
         }
